@@ -1,0 +1,168 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Tailwind CSS theme
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+   * A different format will require also updating the theme in tailwind.config.ts.
+  */
+  :root {
+    --background: 280 30% 98%;
+    --foreground: 280 20% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 280 20% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 280 20% 15%;
+
+    --primary: 280 65% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 290 40% 95%;
+    --secondary-foreground: 280 20% 15%;
+
+    --muted: 280 15% 85%;
+    --muted-foreground: 280 10% 50%;
+
+    --accent: 330 70% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 280 20% 90%;
+    --input: 280 20% 95%;
+    --ring: 280 65% 55%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 280 30% 98%;
+
+    --sidebar-foreground: 280 20% 15%;
+
+    --sidebar-primary: 280 65% 55%;
+
+    --sidebar-primary-foreground: 0 0% 100%;
+
+    --sidebar-accent: 290 40% 95%;
+
+    --sidebar-accent-foreground: 280 65% 55%;
+
+    --sidebar-border: 280 20% 90%;
+
+    --sidebar-ring: 280 65% 55%;
+  }
+
+  .dark {
+    --background: 280 25% 10%;
+    --foreground: 280 15% 92%;
+
+    --card: 280 20% 15%;
+    --card-foreground: 280 15% 92%;
+
+    --popover: 280 20% 15%;
+    --popover-foreground: 280 15% 92%;
+
+    --primary: 280 65% 60%;
+    --primary-foreground: 280 25% 10%;
+
+    --secondary: 290 30% 25%;
+    --secondary-foreground: 280 15% 92%;
+
+    --muted: 280 15% 30%;
+    --muted-foreground: 280 10% 70%;
+
+    --accent: 330 70% 65%;
+    --accent-foreground: 280 25% 10%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 280 15% 25%;
+    --input: 280 15% 22%;
+    --ring: 280 65% 60%;
+    --sidebar-background: 280 25% 10%;
+    --sidebar-foreground: 280 15% 92%;
+    --sidebar-primary: 280 65% 60%;
+    --sidebar-primary-foreground: 280 25% 10%;
+    --sidebar-accent: 290 30% 25%;
+    --sidebar-accent-foreground: 330 70% 65%;
+    --sidebar-border: 280 15% 25%;
+    --sidebar-ring: 280 65% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  pre,
+  code {
+    overflow-x: auto;
+    white-space: pre;
+  }
+}
+
+@layer utilities {
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+      opacity: 0.6;
+    }
+    25% {
+      transform: translateY(-20px) translateX(10px);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translateY(-10px) translateX(-10px);
+      opacity: 0.4;
+    }
+    75% {
+      transform: translateY(-30px) translateX(5px);
+      opacity: 0.7;
+    }
+  }
+
+  .animate-float {
+    animation: float ease-in-out infinite;
+  }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 3s linear infinite;
+  }
+
+  @keyframes scale-102 {
+    to {
+      transform: scale(1.02);
+    }
+  }
+
+  .hover\:scale-102:hover {
+    animation: scale-102 0.2s ease-out forwards;
+  }
+}
