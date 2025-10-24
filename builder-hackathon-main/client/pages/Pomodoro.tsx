@@ -70,11 +70,32 @@ export default function Pomodoro() {
   };
 
   const playNotificationSound = () => {
-    // Simple notification
+    // Encouraging completion notification
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('Pomodoro Timer', {
-        body: mode === 'work' ? 'Work session complete! Time for a break.' : 'Break is over! Back to work.',
-        icon: '🍅',
+      const encouragingMessages = {
+        work: [
+          '🎉 Incredible focus! You just crushed 25 minutes of deep work!',
+          '💪 That\'s how it\'s done! Another session in the books!',
+          '🌟 Awesome job! You\'re building amazing focus habits!',
+          '🚀 Productivity champion! Time to recharge and come back stronger!',
+          '✨ Brilliant work! You\'re proving what consistent effort looks like!',
+          '🔥 On fire! That focus session was pure dedication!',
+        ],
+        break: [
+          '⚡ Break over! You\'re recharged and ready to dominate!',
+          '💼 Let\'s go! Bring that refreshed energy to your next session!',
+          '🎯 Back to it! Your momentum is building!',
+          '🌊 Ready to ride the next wave of productivity!',
+        ],
+      };
+
+      const messages = mode === 'work' ? encouragingMessages.work : encouragingMessages.break;
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+      new Notification('Pomodoro Timer Complete! 🎉', {
+        body: randomMessage,
+        icon: mode === 'work' ? '🍅' : '☕',
+        requireInteraction: false,
       });
     }
   };
@@ -82,9 +103,27 @@ export default function Pomodoro() {
   const playThirtySecondWarning = () => {
     // 30-second warning notification
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('Pomodoro Timer - 30 Seconds Left!', {
-        body: mode === 'work' ? '30 seconds remaining in your work session.' : '30 seconds until break ends.',
+      const warningMessages = {
+        work: [
+          '⏰ 30 seconds left! Finish strong!',
+          '🏃 Final push! 30 seconds to go!',
+          '💫 Almost there! 30 seconds remaining!',
+          '🎯 Home stretch! 30 seconds left!',
+        ],
+        break: [
+          '⏰ 30 seconds left! Get ready to focus!',
+          '🔔 Wrapping up! 30 seconds until work time!',
+          '⚡ Last 30 seconds! Prep for productivity!',
+        ],
+      };
+
+      const messages = mode === 'work' ? warningMessages.work : warningMessages.break;
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+      new Notification('Pomodoro Timer - 30 Seconds!', {
+        body: randomMessage,
         icon: '⏰',
+        requireInteraction: false,
       });
     }
   };

@@ -8,10 +8,12 @@ import { StreakVisualization } from '@/components/StreakVisualization';
 import { Button } from '@/components/ui/button';
 import { LoginModal } from '@/components/LoginModal';
 import { Link } from 'react-router-dom';
+import { useWorkMode } from '@/hooks/useWorkMode';
 
 export default function Calendar() {
   const { state, completeGoal } = useWorkTrackerState();
   const { isAuthenticated } = useAuth();
+  const { emoji } = useWorkMode();
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [loginOpen, setLoginOpen] = useState(false);
   const [hoveredDay, setHoveredDay] = useState<string | null>(null);
@@ -462,18 +464,18 @@ export default function Calendar() {
                         
                         {dateStr < today && (
                           <div className="pt-3 border-t border-purple-200 dark:border-purple-800 space-y-2">
-                            <div className="text-xs font-semibold text-purple-700 dark:text-purple-300 mb-2">📊 Productivity Metrics:</div>
+                            <div className="text-xs font-semibold text-purple-700 dark:text-purple-300 mb-2">{emoji('📊 ')}Productivity Metrics:</div>
                             <div className="grid grid-cols-2 gap-2">
                               <div className="bg-white/50 dark:bg-black/20 rounded px-2 py-1.5">
                                 <div className="text-[10px] text-muted-foreground">Energy</div>
                                 <div className="text-xs font-bold text-purple-600 dark:text-purple-400">
-                                  {percentage > 0 ? (percentage >= 75 ? 'High ⚡' : percentage >= 50 ? 'Medium ⚡' : 'Low ⚡') : 'N/A'}
+                                  {percentage > 0 ? (percentage >= 75 ? `High ${emoji('⚡')}` : percentage >= 50 ? `Medium ${emoji('⚡')}` : `Low ${emoji('⚡')}`) : 'N/A'}
                                 </div>
                               </div>
                               <div className="bg-white/50 dark:bg-black/20 rounded px-2 py-1.5">
                                 <div className="text-[10px] text-muted-foreground">Sessions</div>
                                 <div className="text-xs font-bold text-pink-600 dark:text-pink-400">
-                                  {percentage > 0 ? `${completedGoals.length} 🍅` : 'N/A'}
+                                  {percentage > 0 ? `${completedGoals.length} ${emoji('🍅')}` : 'N/A'}
                                 </div>
                               </div>
                               <div className="bg-white/50 dark:bg-black/20 rounded px-2 py-1.5">
@@ -545,7 +547,7 @@ export default function Calendar() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Current Streak</span>
-                  <span className="text-2xl font-bold text-orange-600 dark:text-orange-400">{overallStreak} 🔥</span>
+                  <span className="text-2xl font-bold text-orange-600 dark:text-orange-400">{overallStreak} {emoji('🔥')}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">This Month</span>
@@ -557,7 +559,7 @@ export default function Calendar() {
             <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 border-purple-200">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  😊 Mood This Week
+                  {emoji('😊 ')}Mood This Week
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -566,7 +568,7 @@ export default function Calendar() {
                     const moodHistory = JSON.parse(localStorage.getItem('moodHistory') || '[]');
                     const last7Days = moodHistory.slice(-7);
                     if (last7Days.length === 0) {
-                      return <p className="text-sm text-muted-foreground text-center w-full">Track your mood daily to see patterns! ✨</p>;
+                      return <p className="text-sm text-muted-foreground text-center w-full">Track your mood daily to see patterns! {emoji('✨')}</p>;
                     }
                     return last7Days.map((entry: any, i: number) => (
                       <div key={i} className="flex flex-col items-center gap-1">
@@ -627,8 +629,8 @@ export default function Calendar() {
                       <p className="text-sm text-muted-foreground">{goal.completedDates.length} times completed</p>
                     </div>
                     <div className="flex gap-4 text-sm">
-                      <span className="text-muted-foreground">🔥 {streak?.currentStreak || 0}</span>
-                      <span className="text-muted-foreground">🏆 {streak?.longestStreak || 0}</span>
+                      <span className="text-muted-foreground">{emoji('🔥 ')}{streak?.currentStreak || 0}</span>
+                      <span className="text-muted-foreground">{emoji('🏆 ')}{streak?.longestStreak || 0}</span>
                     </div>
                   </div>
                 );
@@ -639,7 +641,7 @@ export default function Calendar() {
 
         {isAuthenticated && state.goals.length === 0 && (
           <div className="bg-card border border-border rounded-lg p-12 text-center">
-            <div className="text-5xl mb-4">📅</div>
+            {emoji('📅') && <div className="text-5xl mb-4">{emoji('📅')}</div>}
             <h3 className="text-lg font-semibold text-foreground mb-2">No goals to track yet</h3>
             <p className="text-muted-foreground">
               Create goals to start seeing your progress on the calendar.

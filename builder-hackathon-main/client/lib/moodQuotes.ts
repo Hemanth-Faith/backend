@@ -26,10 +26,10 @@ export const getMoodBasedQuote = (mood: string | null): { text: string; author: 
       { text: "Your frustration means you care. Channel that energy into action.", author: "Unknown" },
       { text: "Every setback is a setup for a comeback. Keep pushing forward.", author: "Unknown" },
     ],
-    grateful: [
-      { text: "Gratitude turns what we have into enough. You're exactly where you need to be.", author: "Melody Beattie" },
-      { text: "The more grateful you are, the more beauty you see. Keep counting your blessings!", author: "Unknown" },
-      { text: "Gratitude is the healthiest of all human emotions. Feel it deeply today.", author: "Zig Ziglar" },
+    lazy: [
+      { text: "Even on low-energy days, showing up counts. One small step is enough.", author: "Unknown" },
+      { text: "It's okay to take it slow. Rest is part of productivity, not the opposite.", author: "Unknown" },
+      { text: "Low energy doesn't mean low value. Be kind to yourself today.", author: "Unknown" },
     ],
     motivated: [
       { text: "Your motivation today will be your success tomorrow. Harness this energy!", author: "Unknown" },
@@ -80,10 +80,10 @@ export const getMoodBasedTips = (mood: string | null): string[] => {
       "💪 Your frustration shows you care - use it as fuel!",
       "🎯 Sometimes a different approach is all you need.",
     ],
-    grateful: [
-      "📖 Write down 3 things you're grateful for right now.",
-      "💝 Express thanks to someone who helped you recently.",
-      "🌱 Use this positive energy to set new intentions.",
+    lazy: [
+      "�️ Start with the easiest task - just one thing to build momentum.",
+      "☕ A short walk or stretching can help shift your energy gently.",
+      "📱 Set a timer for 5 minutes and see what you can do - no pressure!",
     ],
     motivated: [
       "🚀 Strike while the iron is hot - tackle your biggest goal!",

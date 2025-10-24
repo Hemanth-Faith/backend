@@ -68,14 +68,19 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
     localStorage.setItem('user_email', signupEmail);
     localStorage.setItem('user_password', signupPassword);
     
-    toast({
-      title: "Account created!",
-      description: "You can now log in with your credentials.",
-    });
+    // Automatically log in the new user
+    const success = login(signupEmail, signupPassword);
     
-    setSignupEmail('');
-    setSignupPassword('');
-    setConfirmPassword('');
+    if (success) {
+      toast({
+        title: "Account created!",
+        description: "Welcome! You've been automatically logged in.",
+      });
+      onOpenChange(false);
+      setSignupEmail('');
+      setSignupPassword('');
+      setConfirmPassword('');
+    }
   };
 
   return (

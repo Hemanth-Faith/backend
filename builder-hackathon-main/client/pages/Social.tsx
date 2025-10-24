@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { LoginModal } from '@/components/LoginModal';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
+import { useWorkMode } from '@/hooks/useWorkMode';
 
 interface User {
   id: string;
@@ -41,6 +42,7 @@ interface Friend {
 
 export default function Social() {
   const { isAuthenticated, user } = useAuth();
+  const { emoji } = useWorkMode();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [friends, setFriends] = useState<Friend[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -147,13 +149,13 @@ export default function Social() {
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'goal_completed':
-        return '✅';
+        return emoji('✅');
       case 'streak_milestone':
-        return '🔥';
+        return emoji('🔥');
       case 'badge_unlocked':
-        return '🏆';
+        return emoji('🏆');
       default:
-        return '📌';
+        return emoji('📌');
     }
   };
 

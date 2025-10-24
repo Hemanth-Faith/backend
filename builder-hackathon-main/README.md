@@ -37,6 +37,37 @@ A modern, full-featured work tracking application built with React, TypeScript, 
 - Streak protection alerts
 - Effort balance suggestions
 
+### 💬 Intelligent Chatbot (NEW!)
+- **App-Specific Help** - Guides users through features (goals, streaks, Pomodoro, calendar, social)
+- **General Life Advice** - Productivity tips, work-life balance, mental health support
+- **Psychological Nudging** - Uses behavioral psychology techniques to motivate action:
+  - Identity-based motivation ("You're the kind of person who...")
+  - Reframing negative thoughts into actionable perspectives
+  - Permission-giving language to reduce guilt
+  - Commitment devices and minimal viable actions
+  - Loss aversion and implementation intentions
+- **Natural Language Processing** - Pattern matching for context-aware responses
+- **Quick Actions** - Pre-defined buttons for common questions
+- **Always Available** - Floating chat button on every page
+- **No External API** - Fully client-side implementation with 369 lines of intelligent response logic
+
+**Technology:**
+- **Language**: TypeScript/JavaScript
+- **Framework**: React functional component with hooks
+- **Model**: Rule-based NLP with pattern matching (no AI/ML model required)
+- **Storage**: None - stateless conversation design
+- **UI**: shadcn/ui Dialog, Card, Button, Input components
+- **Icons**: Lucide React (MessageCircle, Send, X, Sparkles)
+
+**Implementation Details:**
+- Location: `client/components/Chatbot.tsx`
+- 369 lines of code with 200+ line response function
+- Pattern matching using `.toLowerCase()` and `.includes()` for topic detection
+- Supports 30+ topics including procrastination, focus, burnout, sleep, exercise, failure, comparison, purpose
+- Psychological techniques embedded in responses to influence behavior subtly
+- No training data or API calls - fully deterministic responses
+- Instant responses with no latency
+
 ## 🛠️ Tech Stack
 
 ### Frontend

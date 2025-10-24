@@ -2,15 +2,18 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { ReactNode, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { LoginModal } from '@/components/LoginModal';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 import { SettingsMenu } from '@/components/SettingsMenu';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { Moon, Sun } from 'lucide-react';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [loginOpen, setLoginOpen] = useState(false);
   
   // Enable keyboard shortcuts
@@ -56,6 +59,14 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           {/* Right side actions */}
           <div className="flex items-center gap-2">
             <SettingsMenu />
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
             {isAuthenticated ? (
               <ProfileDropdown />
             ) : (

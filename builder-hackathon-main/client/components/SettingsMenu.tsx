@@ -53,18 +53,7 @@ export const SettingsMenu = () => {
           {/* Appearance */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold">Appearance</h3>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-                <Label htmlFor="dark-mode">Dark Mode</Label>
-              </div>
-              <Switch
-                id="dark-mode"
-                checked={theme === 'dark'}
-                onCheckedChange={toggleTheme}
-              />
-            </div>
-
+            
             <div className="flex items-center justify-between">
               <Label htmlFor="notifications">Notifications</Label>
               <Switch

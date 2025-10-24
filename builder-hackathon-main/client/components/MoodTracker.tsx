@@ -14,7 +14,7 @@ const moods: Mood[] = [
   { emoji: '😔', label: 'Sad', value: 'sad' },
   { emoji: '😰', label: 'Anxious', value: 'anxious' },
   { emoji: '😤', label: 'Frustrated', value: 'frustrated' },
-  { emoji: '🤗', label: 'Grateful', value: 'grateful' },
+  { emoji: '😑', label: 'Lazy', value: 'lazy' },
   { emoji: '💪', label: 'Motivated', value: 'motivated' },
   { emoji: '😴', label: 'Tired', value: 'tired' },
 ];
@@ -46,6 +46,7 @@ export function MoodTracker({ onMoodSelect }: MoodTrackerProps) {
     localStorage.setItem('lastMoodDate', today);
     localStorage.setItem('currentMood', mood.value);
     localStorage.setItem('currentMoodEmoji', mood.emoji);
+    localStorage.setItem('currentMoodLabel', mood.label);
     
     // Store mood history
     const moodHistory = JSON.parse(localStorage.getItem('moodHistory') || '[]');

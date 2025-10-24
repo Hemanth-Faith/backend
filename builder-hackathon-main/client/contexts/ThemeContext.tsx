@@ -5,12 +5,15 @@ type Theme = 'light' | 'dark';
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  workMode: boolean;
+  toggleWorkMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>('light');
+  const [workMode, setWorkMode] = useState<boolean>(false);
 
   useEffect(() => {
     // Check localStorage and system preference
@@ -22,6 +25,13 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     
     if (initialTheme === 'dark') {
       document.documentElement.classList.add('dark');
+    }
+
+    // Load work mode preference
+    const savedWorkMode = localStorage.getItem('work_mode') === 'true';
+    setWorkMode(savedWorkMode);
+    if (savedWorkMode) {
+      document.documentElement.classList.add('work-mode');
     }
   }, []);
 
@@ -37,8 +47,20 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const toggleWorkMode = () => {
+    const newWorkMode = !workMode;
+    setWorkMode(newWorkMode);
+    localStorage.setItem('work_mode', String(newWorkMode));
+    
+    if (newWorkMode) {
+      document.documentElement.classList.add('work-mode');
+    } else {
+      document.documentElement.classList.remove('work-mode');
+    }
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, workMode, toggleWorkMode }}>
       {children}
     </ThemeContext.Provider>
   );

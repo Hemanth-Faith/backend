@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { Chatbot } from "@/components/Chatbot";
 import Dashboard from "./pages/Dashboard";
 import Goals from "./pages/Goals";
 import Calendar from "./pages/Calendar";
@@ -36,6 +37,7 @@ export default function App() {
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <Chatbot />
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>

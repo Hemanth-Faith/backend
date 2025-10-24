@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = (email: string, password: string): boolean => {
-    // Simple authentication check
+    // Check for hardcoded admin credentials
     if (email === 'admin@1234' && password === '1234') {
       const newUser = {
         email: 'admin@1234',
@@ -38,6 +38,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem('auth_user', JSON.stringify(newUser));
       return true;
     }
+
+    // Check for registered user credentials
+    const savedEmail = localStorage.getItem('user_email');
+    const savedPassword = localStorage.getItem('user_password');
+    
+    if (email === savedEmail && password === savedPassword) {
+      const newUser = {
+        email: email,
+        name: email.split('@')[0],
+        avatar: '👤',
+      };
+      setUser(newUser);
+      localStorage.setItem('auth_user', JSON.stringify(newUser));
+      return true;
+    }
+
     return false;
   };
 
