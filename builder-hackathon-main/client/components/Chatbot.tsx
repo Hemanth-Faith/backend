@@ -33,6 +33,43 @@ export const Chatbot = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Levenshtein distance for fuzzy matching
+  const getLevenshteinDistance = (str1: string, str2: string): number => {
+    const track = Array(str2.length + 1).fill(null).map(() =>
+      Array(str1.length + 1).fill(null));
+    for (let i = 0; i <= str1.length; i += 1) {
+      track[0][i] = i;
+    }
+    for (let j = 0; j <= str2.length; j += 1) {
+      track[j][0] = j;
+    }
+    for (let j = 1; j <= str2.length; j += 1) {
+      for (let i = 1; i <= str1.length; i += 1) {
+        const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
+        track[j][i] = Math.min(
+          track[j][i - 1] + 1,
+          track[j - 1][i] + 1,
+          track[j - 1][i - 1] + indicator,
+        );
+      }
+    }
+    return track[str2.length][str1.length];
+  };
+
+  // Fuzzy match helper
+  const fuzzyMatch = (text: string, keywords: string[]): boolean => {
+    const words = text.split(' ');
+    return keywords.some(keyword => {
+      return words.some(word => {
+        // Direct match
+        if (word.includes(keyword) || keyword.includes(word)) return true;
+        // Fuzzy match (allow 1-2 character difference)
+        const maxDistance = keyword.length > 5 ? 2 : 1;
+        return getLevenshteinDistance(word, keyword) <= maxDistance;
+      });
+    });
+  };
+
   const getBotResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
 
@@ -45,15 +82,15 @@ export const Chatbot = () => {
       return "Research suggests most people are most productive:\n\n🌅 Morning (9-11 AM): Peak mental clarity\n🌞 Mid-day (2-4 PM): Good for collaborative work\n🌙 Evening: Varies by person\n\nTry tracking your energy levels to find YOUR optimal time. Everyone's different!";
     }
 
-    if (lowerMessage.includes('productivity') && (lowerMessage.includes('tip') || lowerMessage.includes('advice'))) {
+    if (fuzzyMatch(lowerMessage, ['productivity', 'productivty', 'productvity', 'productiviti']) && (lowerMessage.includes('tip') || lowerMessage.includes('advice'))) {
       return "Here are my top productivity tips:\n\n1. Start small - one habit at a time\n2. Track your wins, not just tasks\n3. Take real breaks (not phone scrolling!)\n4. Sleep is a productivity tool, not laziness\n5. Say 'no' to protect your focus time\n\nWhat area do you struggle with most?";
     }
 
-    if (lowerMessage.includes('procrastinat')) {
+    if (fuzzyMatch(lowerMessage, ['procrastinate', 'procrastinat', 'procrastination', 'procrasinating', 'procrastinatin'])) {
       return "Interesting - you're already aware you're procrastinating, which means you're halfway to solving it!\n\nHere's a thought experiment: What would happen if you spent just 2 minutes on it right now? Not finishing it, just 2 minutes.\n\nOften, starting is 80% of the battle. The task feels smaller once you begin.\n\nWhat's ONE tiny action you could take in the next 60 seconds?";
     }
 
-    if (lowerMessage.includes('burnout') || lowerMessage.includes('overwhelm')) {
+    if (fuzzyMatch(lowerMessage, ['burnout', 'burnot', 'burntout', 'overwhelm', 'overwhelmed', 'overwelm'])) {
       return "The fact that you recognize this feeling shows incredible self-awareness.\n\nHere's something counterintuitive: Taking a break isn't slowing you down - it's the thing that will speed you up.\n\nRight now, what if you gave yourself permission to do just ONE thing today? Not everything. Just one.\n\nWhich single task would make today feel like a win? Let's start there. The rest can wait.";
     }
 
@@ -61,35 +98,35 @@ export const Chatbot = () => {
       return "Work-life balance isn't 50/50, it's about harmony:\n\n• Set clear work boundaries\n• Protect personal time religiously\n• Quality > Quantity in both areas\n• Turn off notifications after hours\n• Make time for what matters\n\nBalance changes daily - that's okay!";
     }
 
-    if (lowerMessage.includes('sleep') || lowerMessage.includes('tired') || lowerMessage.includes('exhausted')) {
+    if (fuzzyMatch(lowerMessage, ['sleep', 'slep', 'tired', 'tird', 'exhausted', 'exausted'])) {
       return "Everything you're trying to achieve gets easier with sleep. Think about it - every goal you have performs better when YOU perform better.\n\nHere's a challenge: What if you treated sleep like your most important meeting tomorrow? You wouldn't skip it, right?\n\nSet a bedtime alarm for tonight. Not to sleep - just to START getting ready. That's step one.\n\nYour goals can wait a few hours. They'll still be there tomorrow, and you'll crush them better when you're rested.";
     }
 
-    if (lowerMessage.includes('exercise') || lowerMessage.includes('workout') || lowerMessage.includes('fitness')) {
+    if (fuzzyMatch(lowerMessage, ['exercise', 'excersize', 'exersize', 'workout', 'workut', 'fitness', 'fitnes'])) {
       return "Movement is medicine! 💪\n\n• Even 10 minutes counts\n• Walking is underrated\n• Find what you enjoy (it's sustainable)\n• Consistency > Intensity\n• Rest days build strength\n\nTry: 5-min morning stretch or 10-min walk. Start small!";
     }
 
-    if (lowerMessage.includes('diet') || lowerMessage.includes('food') || lowerMessage.includes('eating')) {
+    if (fuzzyMatch(lowerMessage, ['diet', 'deit', 'food', 'eating', 'eatting'])) {
       return "Nutrition affects everything - energy, mood, focus:\n\n🥗 Eat more whole foods\n💧 Hydrate consistently\n🍽️ Protein at each meal\n🚫 Minimize processed sugar\n⏰ Regular meal times help\n\nNo need for perfection - progress is enough!";
     }
 
-    if (lowerMessage.includes('mental health') || lowerMessage.includes('anxiety') || lowerMessage.includes('depression')) {
+    if (fuzzyMatch(lowerMessage, ['mental', 'mentl', 'health', 'anxiety', 'anxity', 'anxieti', 'depression', 'depresion'])) {
       return "Your mental health matters most. 💚\n\n• Talk to someone - therapist, friend, family\n• Movement helps mood\n• Limit social media\n• Practice self-compassion\n• Professional help is strength, not weakness\n\nYou're not alone. Crisis resources: Call 988 (US) or local helpline.";
     }
 
-    if (lowerMessage.includes('meaning') || lowerMessage.includes('purpose') || lowerMessage.includes('why')) {
+    if (fuzzyMatch(lowerMessage, ['meaning', 'meening', 'purpose', 'purpos'])) {
       return "Finding meaning is a journey, not a destination:\n\n• Try different things\n• Notice what energizes you\n• Help others (instant meaning)\n• Small purposes compound\n• It's okay to not know yet\n\nMeaning comes from doing, not just thinking. Start exploring!";
     }
 
-    if (lowerMessage.includes('failure') || lowerMessage.includes('fail') || lowerMessage.includes('mistake')) {
+    if (fuzzyMatch(lowerMessage, ['failure', 'failur', 'fail', 'fale', 'mistake', 'mistke'])) {
       return "Can I reframe this for you?\n\nYou didn't fail - you just collected data. Every person you admire has a graveyard of attempts behind them.\n\nHere's the real question: What did this teach you? Because knowledge without action is just information, but action after failure is wisdom.\n\nWhat's the smallest next step you could try differently? Not perfect, just different.";
     }
 
-    if (lowerMessage.includes('success') || lowerMessage.includes('achieve')) {
+    if (fuzzyMatch(lowerMessage, ['success', 'succes', 'sucess', 'achieve', 'achive', 'acheive'])) {
       return "Success isn't a destination:\n\n✓ Define YOUR version (not society's)\n✓ Celebrate small wins\n✓ Progress > Perfection\n✓ Enjoy the journey\n✓ Success is peace, not just achievement\n\nYou're already successful if you're trying. Keep growing!";
     }
 
-    if (lowerMessage.includes('compare') || lowerMessage.includes('comparison')) {
+    if (fuzzyMatch(lowerMessage, ['compare', 'compair', 'comparison', 'comparision'])) {
       return "Comparison is the thief of joy:\n\n• You see their highlight reel, not reality\n• Everyone's timeline is different\n• Focus on YOUR growth\n• Unfollow what makes you feel bad\n• Your only competition is yesterday's you\n\nRun your own race. 🏃";
     }
 
@@ -97,69 +134,69 @@ export const Chatbot = () => {
       return "That's a great question! While I specialize in productivity and work tracking, I'm happy to share general thoughts.\n\nCould you be more specific? Or ask me about:\n• Productivity strategies\n• Goal setting\n• Time management\n• Work-life balance\n• Building habits\n• This app's features";
     }
 
-    // Goals related (with identity-based motivation)
-    if (lowerMessage.includes('goal') || lowerMessage.includes('task')) {
-      if (lowerMessage.includes('create') || lowerMessage.includes('add') || lowerMessage.includes('how')) {
+    // Goals related (with identity-based motivation and fuzzy matching)
+    if (fuzzyMatch(lowerMessage, ['goal', 'gol', 'goals', 'task', 'tsk', 'tasks'])) {
+      if (fuzzyMatch(lowerMessage, ['create', 'creat', 'add', 'ad', 'make'])) {
         return "Great timing! Creating a goal is literally you deciding who you want to become.\n\nGo to the Goals page (📋 icon) → '+ New Goal'\n\nPro tip: Start with ONE light goal. People who master one thing first tend to succeed with more. What's the easiest win you could create right now?";
       }
-      if (lowerMessage.includes('delete') || lowerMessage.includes('remove')) {
+      if (fuzzyMatch(lowerMessage, ['delete', 'delet', 'remove', 'remov'])) {
         return "Smart to review your goals! Successful people say no to things that don't serve them.\n\nGo to Goals page → trash icon next to the goal.\n\nYour progress stays safe. Sometimes less is more. Which goal no longer serves you?";
       }
-      if (lowerMessage.includes('complete') || lowerMessage.includes('finish')) {
+      if (fuzzyMatch(lowerMessage, ['complete', 'complet', 'finish', 'finsh'])) {
         return "This is where the magic happens! Each checkmark isn't just a task - it's you proving to yourself that you keep commitments.\n\nClick the checkmark on your Dashboard next to any goal.\n\nWhich goal are you about to complete? That's a win worth celebrating!";
       }
       return "You're asking about goals - that puts you ahead of most people already. Goals aren't just tasks, they're decisions about who you're becoming.\n\nReady to create your first one? Go to Goals page and start small. What matters to you today?";
     }
 
-    // Streak related (with loss aversion psychology)
-    if (lowerMessage.includes('streak')) {
-      if (lowerMessage.includes('lose') || lowerMessage.includes('break') || lowerMessage.includes('miss')) {
+    // Streak related (with loss aversion psychology and fuzzy matching)
+    if (fuzzyMatch(lowerMessage, ['streak', 'strek', 'streek'])) {
+      if (fuzzyMatch(lowerMessage, ['lose', 'loose', 'break', 'brek', 'miss', 'mis'])) {
         return "Here's the thing about streaks - missing one day hurts way more than starting feels good. That's actually useful information.\n\nYour streak resets if you miss a day, but here's what doesn't reset: the person you've become by showing up.\n\nTo protect your streak:\n• Pick ONE goal you'll never skip (make it tiny)\n• Check Dashboard daily (even for 30 seconds)\n• Enable notifications\n\nWhat's your 'never miss' goal? Make it almost too easy.";
       }
-      if (lowerMessage.includes('best') || lowerMessage.includes('record')) {
+      if (fuzzyMatch(lowerMessage, ['best', 'record', 'recod'])) {
         return "Your best streak? That's not just a number - that's proof of what you're capable of.\n\nIt never disappears, even if your current streak breaks. View it on Dashboard or Calendar.\n\nHere's a question: What would it take to beat your record? Not by 100 days. Just by one.";
       }
       return "Streaks are interesting - they turn showing up into a game. But here's the secret: you're not building a streak, you're building an identity.\n\nEach day you show up, you're proving to yourself who you are. The number is just feedback.\n\nHow many days have you shown up so far?";
     }
 
-    // Pomodoro related
-    if (lowerMessage.includes('pomodoro') || lowerMessage.includes('timer') || lowerMessage.includes('focus')) {
-      if (lowerMessage.includes('how') || lowerMessage.includes('use') || lowerMessage.includes('work')) {
+    // Pomodoro related with fuzzy matching
+    if (fuzzyMatch(lowerMessage, ['pomodoro', 'pomadoro', 'pomodro', 'timer', 'timr', 'focus', 'focas'])) {
+      if (fuzzyMatch(lowerMessage, ['how', 'use', 'work', 'works'])) {
         return "The Pomodoro Technique helps you focus:\n\n1. Click '🍅 Pomodoro' in navigation\n2. Select Work mode (25 min)\n3. Start the timer\n4. Focus on one task\n5. Take a 5-min break after\n\nYou can link sessions to specific goals and get notifications when complete!";
       }
-      if (lowerMessage.includes('customize') || lowerMessage.includes('change') || lowerMessage.includes('duration')) {
+      if (fuzzyMatch(lowerMessage, ['customize', 'customise', 'change', 'chang', 'duration', 'duraton'])) {
         return "Default durations are:\n• Work: 25 minutes\n• Short Break: 5 minutes\n• Long Break: 15 minutes\n\nYou can pause/resume anytime. After 4 work sessions, take a long break!";
       }
       return "The Pomodoro Timer (🍅) helps you focus with 25-minute work sessions and short breaks. It's proven to boost productivity and prevent burnout!";
     }
 
-    // Calendar related
-    if (lowerMessage.includes('calendar') || lowerMessage.includes('progress') || lowerMessage.includes('history')) {
+    // Calendar related with fuzzy matching
+    if (fuzzyMatch(lowerMessage, ['calendar', 'calander', 'calandar', 'progress', 'progres', 'history', 'histori'])) {
       return "The Calendar (📅) shows your completion history:\n\n• Green days = goals completed\n• Darker green = more completion\n• Gray = inactive days\n• Hover for detailed stats\n\nTrack your patterns, streaks, and productivity over time!";
     }
 
-    // Social features
-    if (lowerMessage.includes('social') || lowerMessage.includes('friend') || lowerMessage.includes('share')) {
+    // Social features with fuzzy matching
+    if (fuzzyMatch(lowerMessage, ['social', 'socail', 'friend', 'frend', 'friends', 'share', 'shar'])) {
       return "Social features (👥) let you:\n\n• Connect with friends\n• See their achievements\n• Share your progress\n• Like and comment on activities\n• View friend statistics\n\nLogin to access social features!";
     }
 
-    // Mood tracking
-    if (lowerMessage.includes('mood') || lowerMessage.includes('feeling') || lowerMessage.includes('emotion')) {
+    // Mood tracking with fuzzy matching
+    if (fuzzyMatch(lowerMessage, ['mood', 'mod', 'feeling', 'fealing', 'emotion', 'emtion'])) {
       return "Track your daily mood from the Dashboard! Your mood affects how goals are sorted:\n\n😊 Happy: Hardest tasks first\n😢 Sad: Easiest tasks first\n\nThis helps match tasks to your energy level. View mood patterns on the Calendar!";
     }
 
-    // Badges/achievements
-    if (lowerMessage.includes('badge') || lowerMessage.includes('achievement') || lowerMessage.includes('unlock')) {
+    // Badges/achievements with fuzzy matching
+    if (fuzzyMatch(lowerMessage, ['badge', 'badg', 'badges', 'achievement', 'acheivement', 'unlock', 'unlok'])) {
       return "Unlock badges by hitting milestones:\n\n🔥 Streak achievements\n📅 Consistency badges\n🎯 Goal completion awards\n⭐ Special achievements\n\nKeep completing goals to collect them all!";
     }
 
-    // Notifications
-    if (lowerMessage.includes('notification') || lowerMessage.includes('reminder') || lowerMessage.includes('alert')) {
+    // Notifications with fuzzy matching
+    if (fuzzyMatch(lowerMessage, ['notification', 'notifcation', 'notifikation', 'reminder', 'remindr', 'alert', 'alrt'])) {
       return "Enable notifications in Settings (⚙️ menu) to get:\n\n• Pomodoro session alerts\n• 30-second warnings\n• Goal reminders\n\nMake sure to allow notifications in your browser!";
     }
 
-    // General help
-    if (lowerMessage.includes('help') || lowerMessage.includes('how') || lowerMessage.includes('guide')) {
+    // General help with fuzzy matching
+    if (fuzzyMatch(lowerMessage, ['help', 'halp', 'guide', 'guid'])) {
       return "Here's what I can help with:\n\n📋 Creating & managing goals\n🔥 Building streaks\n🍅 Using Pomodoro timer\n📅 Understanding calendar\n👥 Social features\n😊 Mood tracking\n🏆 Earning badges\n\nWhat would you like to know more about?";
     }
 
