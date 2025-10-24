@@ -465,27 +465,27 @@ export default function Calendar() {
                             <div className="text-xs font-semibold text-purple-700 dark:text-purple-300 mb-2">📊 Productivity Metrics:</div>
                             <div className="grid grid-cols-2 gap-2">
                               <div className="bg-white/50 dark:bg-black/20 rounded px-2 py-1.5">
-                                <div className="text-[10px] text-muted-foreground">Focus Time</div>
+                                <div className="text-[10px] text-muted-foreground">Energy</div>
                                 <div className="text-xs font-bold text-purple-600 dark:text-purple-400">
-                                  {Math.floor(Math.random() * 3 + 1)}h {Math.floor(Math.random() * 60)}m
-                                </div>
-                              </div>
-                              <div className="bg-white/50 dark:bg-black/20 rounded px-2 py-1.5">
-                                <div className="text-[10px] text-muted-foreground">Efficiency</div>
-                                <div className="text-xs font-bold text-pink-600 dark:text-pink-400">
-                                  {Math.floor(Math.random() * 30 + 70)}%
+                                  {percentage > 0 ? (percentage >= 75 ? 'High ⚡' : percentage >= 50 ? 'Medium ⚡' : 'Low ⚡') : 'N/A'}
                                 </div>
                               </div>
                               <div className="bg-white/50 dark:bg-black/20 rounded px-2 py-1.5">
                                 <div className="text-[10px] text-muted-foreground">Sessions</div>
-                                <div className="text-xs font-bold text-purple-600 dark:text-purple-400">
-                                  {Math.floor(Math.random() * 8 + 2)} 🍅
+                                <div className="text-xs font-bold text-pink-600 dark:text-pink-400">
+                                  {percentage > 0 ? `${completedGoals.length} 🍅` : 'N/A'}
                                 </div>
                               </div>
                               <div className="bg-white/50 dark:bg-black/20 rounded px-2 py-1.5">
-                                <div className="text-[10px] text-muted-foreground">Energy</div>
+                                <div className="text-[10px] text-muted-foreground">Efficiency</div>
+                                <div className="text-xs font-bold text-purple-600 dark:text-purple-400">
+                                  {percentage > 0 ? `${percentage}%` : 'N/A'}
+                                </div>
+                              </div>
+                              <div className="bg-white/50 dark:bg-black/20 rounded px-2 py-1.5">
+                                <div className="text-[10px] text-muted-foreground">Focus Time</div>
                                 <div className="text-xs font-bold text-pink-600 dark:text-pink-400">
-                                  {['Low', 'Medium', 'High', 'Peak'][Math.floor(Math.random() * 4)]} ⚡
+                                  {percentage > 0 ? `${Math.floor(completedGoals.length * 25 / 60)}h ${(completedGoals.length * 25) % 60}m` : 'N/A'}
                                 </div>
                               </div>
                             </div>

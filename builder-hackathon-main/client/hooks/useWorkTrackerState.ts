@@ -80,6 +80,13 @@ export const useWorkTrackerState = () => {
   const completeGoal = (goalId: string) => {
     const today = new Date().toISOString().split('T')[0];
     setState(prev => {
+      const goal = prev.goals.find(g => g.id === goalId);
+      
+      // Check if already completed today
+      if (goal && goal.completedDates.includes(today)) {
+        return prev; // Already completed today, no changes
+      }
+
       const updatedGoals = prev.goals.map(g => {
         if (g.id === goalId) {
           return {
@@ -94,11 +101,20 @@ export const useWorkTrackerState = () => {
       const updatedStreaks = { ...prev.streaks };
       const streak = updatedStreaks[goalId];
       if (streak) {
-        streak.currentStreak = (streak.currentStreak || 0) + 1;
-        if (streak.currentStreak > (streak.longestStreak || 0)) {
-          streak.longestStreak = streak.currentStreak;
+        // Only update streak if not already updated today
+        if (streak.lastCompletedDate !== today) {
+          const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+          // Continue streak if completed yesterday, otherwise reset to 1
+          if (streak.lastCompletedDate === yesterday) {
+            streak.currentStreak = (streak.currentStreak || 0) + 1;
+          } else {
+            streak.currentStreak = 1;
+          }
+          if (streak.currentStreak > (streak.longestStreak || 0)) {
+            streak.longestStreak = streak.currentStreak;
+          }
+          streak.lastCompletedDate = today;
         }
-        streak.lastCompletedDate = today;
       }
 
       return {

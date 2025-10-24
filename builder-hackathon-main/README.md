@@ -2,6 +2,10 @@
 
 A modern, full-featured work tracking application built with React, TypeScript, Node.js, and MongoDB. Track goals, build streaks, stay focused with Pomodoro, and connect with friends!
 
+> **🚀 New Here?** Check [START-HERE.md](START-HERE.md) for a quick guide to all documentation!
+> 
+> **Quick Start:** Double-click `start.bat` (Windows) or run `./start.sh` (Mac/Linux)
+
 ## ✨ Features
 
 ### 🎯 Core Features
@@ -83,18 +87,32 @@ calendar_work_tracker/
 
 ## 🚀 Getting Started
 
+### Quick Start (Easiest Way!)
+
+**Windows Users:**
+1. Double-click `start.bat`
+2. Open http://localhost:8080
+
+**Mac/Linux Users:**
+1. Run: `chmod +x start.sh && ./start.sh`
+2. Open http://localhost:8080
+
+**Or manually:**
+```bash
+npm install
+npm run dev
+```
+
 ### Prerequisites
 
 - **Node.js** v18 or higher ([Download](https://nodejs.org/))
-- **MongoDB** ([Local](https://www.mongodb.com/try/download/community) or [Atlas](https://www.mongodb.com/cloud/atlas))
-- **npm** or **pnpm** (pnpm recommended)
+- **npm** or **pnpm** (comes with Node.js)
 
-### Installation
+### Detailed Setup
 
-1. **Clone the repository:**
+1. **Navigate to project directory:**
 ```bash
-git clone <repository-url>
-cd calendar_work_tracker/builder-hackathon-main
+cd builder-hackathon-main
 ```
 
 2. **Install dependencies:**
@@ -104,36 +122,37 @@ npm install
 pnpm install
 ```
 
-3. **Set up environment variables:**
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your configuration:
-```env
-MONGODB_URI=mongodb://localhost:27017/work_tracker
-# Or for MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/work_tracker
-
-JWT_SECRET=your-super-secret-key-minimum-32-characters
-PORT=3000
-```
-
-4. **Start MongoDB** (if using local installation):
-```bash
-# Windows
-net start MongoDB
-
-# Mac/Linux
-sudo systemctl start mongod
-```
-
-5. **Start the development server:**
+3. **Start the development server:**
 ```bash
 npm run dev
 ```
 
-6. **Open your browser:**
+4. **Open your browser:**
+- Local: http://localhost:8080
+- Network: http://[your-ip]:8080
+
+**Demo Login Credentials:**
+- Email: `admin@1234`
+- Password: `1234`
+
+### Troubleshooting
+
+Having issues? Check these files:
+- **QUICKSTART.md** - Quick fixes for common problems
+- **SETUP.md** - Comprehensive troubleshooting guide
+
+**Common fixes:**
+```bash
+# Clear cache and reinstall
+npm cache clean --force
+npm install
+
+# Delete node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+
+# Change port if 8080 is busy (edit vite.config.ts)
+```
 ```
 http://localhost:5173
 ```

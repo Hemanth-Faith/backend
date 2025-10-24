@@ -64,6 +64,15 @@ export const SettingsMenu = () => {
                 onCheckedChange={toggleTheme}
               />
             </div>
+
+            <div className="flex items-center justify-between">
+              <Label htmlFor="notifications">Notifications</Label>
+              <Switch
+                id="notifications"
+                checked={notificationsEnabled}
+                onCheckedChange={handleNotificationsToggle}
+              />
+            </div>
           </div>
 
           <Separator />
@@ -81,15 +90,6 @@ export const SettingsMenu = () => {
                 id="sound"
                 checked={soundEnabled}
                 onCheckedChange={handleSoundToggle}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <Label htmlFor="notifications">Notifications</Label>
-              <Switch
-                id="notifications"
-                checked={notificationsEnabled}
-                onCheckedChange={handleNotificationsToggle}
               />
             </div>
           </div>

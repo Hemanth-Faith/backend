@@ -13,6 +13,7 @@ export default function Pomodoro() {
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
   const [selectedGoalId, setSelectedGoalId] = useState<string>('');
   const [todaySessions, setTodaySessions] = useState(0);
+  const [thirtySecondWarningShown, setThirtySecondWarningShown] = useState(false);
 
   // Load today's sessions from localStorage
   useEffect(() => {
@@ -30,6 +31,12 @@ export default function Pomodoro() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isRunning && timeLeft > 0) {
+      // Check for 30 second warning
+      if (timeLeft === 30 && !thirtySecondWarningShown) {
+        playThirtySecondWarning();
+        setThirtySecondWarningShown(true);
+      }
+      
       interval = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
@@ -37,10 +44,11 @@ export default function Pomodoro() {
       handleTimerComplete();
     }
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft]);
+  }, [isRunning, timeLeft, thirtySecondWarningShown]);
 
   const handleTimerComplete = () => {
     setIsRunning(false);
+    setThirtySecondWarningShown(false);
     if (mode === 'work') {
       setSessionsCompleted((prev) => prev + 1);
       
@@ -71,6 +79,16 @@ export default function Pomodoro() {
     }
   };
 
+  const playThirtySecondWarning = () => {
+    // 30-second warning notification
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('Pomodoro Timer - 30 Seconds Left!', {
+        body: mode === 'work' ? '30 seconds remaining in your work session.' : '30 seconds until break ends.',
+        icon: '⏰',
+      });
+    }
+  };
+
   const toggleTimer = () => {
     if (!isRunning && 'Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
@@ -81,12 +99,14 @@ export default function Pomodoro() {
   const resetTimer = () => {
     setIsRunning(false);
     setTimeLeft(durations[mode]);
+    setThirtySecondWarningShown(false);
   };
 
   const changeMode = (newMode: 'work' | 'shortBreak' | 'longBreak') => {
     setMode(newMode);
     setTimeLeft(durations[newMode]);
     setIsRunning(false);
+    setThirtySecondWarningShown(false);
   };
 
   const formatTime = (seconds: number) => {

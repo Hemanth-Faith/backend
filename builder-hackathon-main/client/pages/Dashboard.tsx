@@ -35,6 +35,16 @@ export default function Dashboard() {
   const today = new Date().toISOString().split('T')[0];
   const todaysGoals = state.goals;
 
+  // Initialize completedToday from actual completion data
+  useEffect(() => {
+    const completed = new Set(
+      state.goals
+        .filter(goal => goal.completedDates.includes(today))
+        .map(goal => goal.id)
+    );
+    setCompletedToday(completed);
+  }, [state.goals, today]);
+
   const handleCompleteGoal = (goalId: string) => {
     completeGoal(goalId);
     setCompletedToday(prev => new Set([...prev, goalId]));

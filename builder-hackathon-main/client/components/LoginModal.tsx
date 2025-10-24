@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -14,10 +15,13 @@ interface LoginModalProps {
 export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const { login } = useAuth();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
     const success = login(email, password);
@@ -39,52 +43,146 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
     }
   };
 
+  const handleSignup = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (signupPassword !== confirmPassword) {
+      toast({
+        title: "Passwords don't match",
+        description: "Please make sure your passwords match.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (signupPassword.length < 4) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 4 characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Save new user credentials
+    localStorage.setItem('user_email', signupEmail);
+    localStorage.setItem('user_password', signupPassword);
+    
+    toast({
+      title: "Account created!",
+      description: "You can now log in with your credentials.",
+    });
+    
+    setSignupEmail('');
+    setSignupPassword('');
+    setConfirmPassword('');
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Login to Your Account</DialogTitle>
+          <DialogTitle>Welcome to Work Tracker</DialogTitle>
           <DialogDescription>
-            Enter your credentials to access all features
+            Login or create a new account to get started
           </DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="admin@1234"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+        <Tabs defaultValue="login" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="login">Login</TabsTrigger>
+            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+          </TabsList>
           
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+          <TabsContent value="login">
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="admin@1234"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
 
-          <div className="pt-2">
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-          </div>
+              <div className="pt-2">
+                <Button type="submit" className="w-full">
+                  Login
+                </Button>
+              </div>
 
-          <div className="text-center text-sm text-muted-foreground">
-            <p>Demo credentials:</p>
-            <p className="font-mono">admin@1234 / 1234</p>
-          </div>
-        </form>
+              <div className="text-center text-sm text-muted-foreground">
+                <p>Demo credentials:</p>
+                <p className="font-mono">admin@1234 / 1234</p>
+              </div>
+            </form>
+          </TabsContent>
+          
+          <TabsContent value="signup">
+            <form onSubmit={handleSignup} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="signup-email">Email</Label>
+                <Input
+                  id="signup-email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={signupEmail}
+                  onChange={(e) => setSignupEmail(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="signup-password">Password</Label>
+                <Input
+                  id="signup-password"
+                  type="password"
+                  placeholder="Create password"
+                  value={signupPassword}
+                  onChange={(e) => setSignupPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm Password</Label>
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="pt-2">
+                <Button type="submit" className="w-full">
+                  Create Account
+                </Button>
+              </div>
+
+              <div className="text-center text-sm text-muted-foreground">
+                <p>Your account will be saved locally</p>
+              </div>
+            </form>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
